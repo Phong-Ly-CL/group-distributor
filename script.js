@@ -1,59 +1,93 @@
-let remaining = [];
-const currentEl = document.getElementById("current");
-const historyEl = document.getElementById("history");
-const rollBtn = document.getElementById("roll");
-const startBtn = document.getElementById("start");
-const minInput = document.getElementById("min");
-const maxInput = document.getElementById("max");
+// --- DOM references -------------------------------------------------
+const fromEl = document.getElementById("from");
+const toEl = document.getElementById("to");
+const groupsEl = document.getElementById("groups");
+const groupBtn = document.getElementById("groupBtn");
 const errorEl = document.getElementById("error");
+const groupsBox = document.getElementById("groupsContainer");
 
-function initGame() {
-  const min = parseInt(minInput.value, 10);
-  const max = parseInt(maxInput.value, 10);
+// --- helpers --------------------------------------------------------
+const ballNode = (n) => {
+  const span = document.createElement("span");
+  span.className = "ball";
+  span.textContent = n;
+  return span;
+};
 
-  // Clear previous error message
-  errorEl.textContent = "";
+const shuffle = (arr) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 
-  // Validate range: allow same number (single-value range)
-  if (isNaN(min) || isNaN(max) || min > max) {
-    errorEl.textContent =
-      'Please enter a valid range where "From" is less than or equal to "To".';
-    rollBtn.disabled = true;
+const validateInputs = () => {
+  const from = +fromEl.value;
+  const to = +toEl.value;
+  const groups = +groupsEl.value;
+
+  if (isNaN(from) || isNaN(to) || from > to) {
+    return "Range must be valid and ‘From’ ≤ ‘To’.";
+  }
+  const total = to - from + 1;
+  if (groups < 1 || groups > total) {
+    return "Groups must be between 1 and the total numbers in range.";
+  }
+  return ""; // no error
+};
+
+// --- main action ----------------------------------------------------
+groupBtn.addEventListener("click", () => {
+  groupsBox.innerHTML = "";
+
+  const err = validateInputs();
+  if (err) {
+    errorEl.textContent = err;
     return;
   }
+  errorEl.textContent = "";
 
-  // Build the list of numbers inclusively
-  remaining = Array.from({ length: max - min + 1 }, (_, i) => i + min);
+  const from = +fromEl.value;
+  const to = +toEl.value;
+  const groups = +groupsEl.value;
+  const total = to - from + 1;
 
-  // Reset UI state
-  currentEl.textContent = "";
-  historyEl.innerHTML = "";
-  rollBtn.disabled = false;
-  rollBtn.textContent = "Roll Next Number";
-}
+  // full shuffled list of numbers
+  const numbers = shuffle(Array.from({ length: total }, (_, i) => from + i));
 
-function rollNumber() {
-  if (!remaining.length) return;
+  // base size and “extras” to distribute
+  const baseSize = Math.floor(total / groups);
+  const extras = total % groups;
 
-  const index = Math.floor(Math.random() * remaining.length);
-  const number = remaining.splice(index, 1)[0];
+  // randomly pick which groups get the extra member
+  const extraTargets = shuffle([...Array(groups).keys()]).slice(0, extras);
 
-  currentEl.textContent = number;
-  addToHistory(number);
+  // build result array of groups
+  const result = Array.from({ length: groups }, () => []);
+  let idx = 0;
 
-  if (!remaining.length) {
-    rollBtn.disabled = true;
-    rollBtn.textContent = "All numbers rolled";
-  }
-}
+  numbers.forEach((num) => {
+    result[idx].push(num);
+    const targetSize = baseSize + (extraTargets.includes(idx) ? 1 : 0);
+    if (result[idx].length === targetSize) idx++;
+  });
 
-function addToHistory(num) {
-  const ball = document.createElement("div");
-  ball.className = "ball";
-  ball.textContent = num;
-  historyEl.appendChild(ball);
-}
+  // render groups
+  result.forEach((arr, i) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "group";
 
-// Event listeners
-startBtn.addEventListener("click", initGame);
-rollBtn.addEventListener("click", rollNumber);
+    const header = document.createElement("div");
+    header.className = "group-header";
+    header.textContent = `Group ${i + 1} (${arr.length})`;
+    wrapper.appendChild(header);
+
+    const memberBox = document.createElement("div");
+    memberBox.className = "group-members";
+    arr.forEach((n) => memberBox.appendChild(ballNode(n)));
+    wrapper.appendChild(memberBox);
+
+    groupsBox.appendChild(wrapper);
+  });
+});
