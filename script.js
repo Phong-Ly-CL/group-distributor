@@ -1,4 +1,4 @@
-// --- DOM references -------------------------------------------------
+// DOM references
 const fromEl = document.getElementById("from");
 const toEl = document.getElementById("to");
 const groupsEl = document.getElementById("groups");
@@ -6,7 +6,7 @@ const groupBtn = document.getElementById("groupBtn");
 const errorEl = document.getElementById("error");
 const groupsBox = document.getElementById("groupsContainer");
 
-// --- helpers --------------------------------------------------------
+// helpers
 const ballNode = (n) => {
   const span = document.createElement("span");
   span.className = "ball";
@@ -34,10 +34,10 @@ const validateInputs = () => {
   if (groups < 1 || groups > total) {
     return "Groups must be between 1 and the total numbers in range.";
   }
-  return ""; // no error
+  return "";
 };
 
-// --- main action ----------------------------------------------------
+// main action
 groupBtn.addEventListener("click", () => {
   groupsBox.innerHTML = "";
 
@@ -53,17 +53,12 @@ groupBtn.addEventListener("click", () => {
   const groups = +groupsEl.value;
   const total = to - from + 1;
 
-  // full shuffled list of numbers
   const numbers = shuffle(Array.from({ length: total }, (_, i) => from + i));
 
-  // base size and “extras” to distribute
   const baseSize = Math.floor(total / groups);
   const extras = total % groups;
-
-  // randomly pick which groups get the extra member
   const extraTargets = shuffle([...Array(groups).keys()]).slice(0, extras);
 
-  // build result array of groups
   const result = Array.from({ length: groups }, () => []);
   let idx = 0;
 
@@ -73,7 +68,6 @@ groupBtn.addEventListener("click", () => {
     if (result[idx].length === targetSize) idx++;
   });
 
-  // render groups
   result.forEach((arr, i) => {
     const wrapper = document.createElement("div");
     wrapper.className = "group";
