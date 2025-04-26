@@ -1,3 +1,4 @@
+/* ─── layout & controls ──────────────────────────────────────────── */
 body {
   font-family: system-ui, sans-serif;
   max-width: 800px;
@@ -18,7 +19,6 @@ h2 {
   justify-content: center;
   margin-bottom: 1rem;
 }
-
 .controls label {
   display: flex;
   flex-direction: column;
@@ -28,7 +28,6 @@ h2 {
   width: 7rem;
   padding: 0.3rem;
 }
-
 button {
   padding: 0.5rem 1rem;
   font-weight: 600;
@@ -42,6 +41,7 @@ button {
   margin-top: 0.2rem;
 }
 
+/* ─── groups & balls ─────────────────────────────────────────────── */
 .groups {
   display: flex;
   flex-direction: column;
@@ -77,11 +77,26 @@ button {
   user-select: none;
 }
 
+/* ─── scrollable boxes ───────────────────────────────────────────── */
 .scroll-box {
-  max-height: 60vh; /* adjust to taste */
+  max-height: 60vh; /* current result window */
   overflow-y: auto;
   margin-top: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   padding: 0.5rem;
+}
+
+.scroll-box.history {
+  /* history window a bit smaller */
+  max-height: 40vh;
+}
+
+/* optional: small indent for each history entry */
+details {
+  margin-bottom: 0.8rem;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
 }

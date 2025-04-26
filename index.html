@@ -27,13 +27,18 @@
       <p id="error" class="error"></p>
     </section>
 
+    <!-- Current distribution ----------------------------------------->
     <section>
       <h2>Groups</h2>
-
-      <!-- NEW: scrollable window -->
-      <div class="scroll-box">
+      <div class="scroll-box" id="currentBox">
         <div id="groupsContainer" class="groups"></div>
       </div>
+    </section>
+
+    <!-- History (last 10) -------------------------------------------->
+    <section>
+      <h2>Last 10 Distributions</h2>
+      <div class="scroll-box history" id="historyBox"></div>
     </section>
 
     <script src="script.js"></script>
