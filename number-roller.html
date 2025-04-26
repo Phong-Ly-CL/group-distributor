@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Number Roller</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Bingo Number Roller</h1>
+
+    <div id="setup">
+      <label>
+        From
+        <input type="number" id="min" value="1" min="1" />
+      </label>
+
+      <label>
+        To
+        <input type="number" id="max" value="75" min="1" />
+      </label>
+
+      <button id="start">Start / Reset</button>
+    </div>
+    <div id="error"></div>
+
+    <div id="current"></div>
+    <button id="roll" disabled>Roll Next Number</button>
+    <div id="history"></div>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+  </body>
+</html>
